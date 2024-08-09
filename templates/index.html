@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cultural Integration Survey</title>
+</head>
+<body>
+    <h1>Cultural Integration Survey</h1>
+    <form id="surveyForm">
+        <label for="postcode">Enter your postcode:</label><br>
+        <input type="text" id="postcode" name="postcode" required><br><br>
+        
+        <label for="integration">Do you feel your area is well culturally integrated?</label><br>
+        <input type="radio" id="yes" name="integration" value="yes" required>
+        <label for="yes">Yes</label><br>
+        <input type="radio" id="no" name="integration" value="no" required>
+        <label for="no">No</label><br><br>
+        
+        <input type="submit" value="Submit">
+    </form>
+
+    <div id="response"></div>
+
+    <script>
+        document.getElementById('surveyForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const postcode = document.getElementById('postcode').value;
+            const integration = document.querySelector('input[name="integration"]:checked').value;
+            
+            fetch('/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `postcode=${postcode}&integration=${integration}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('response').innerText = data.message;
+                window.location.href = "/results";
+            });
+        });
+    </script>
+</body>
+</html>
